@@ -1,11 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
 
 const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || '/category/0'
+  console.log(location);
   const {loginUser} = useContext(AuthContext)
   const handleLogin = (event) =>{
     event.preventDefault()
@@ -19,12 +23,14 @@ const Login = () => {
       const loggedUser = result.user
       setSuccess("User logged in successfully")
       console.log(loggedUser);
+      navigate(from, {replace : true})
     })
     .catch(error =>{
       setError(error.message)
       console.log(error);
     })
   }
+  
   return (
     <Container className="w-50 mx-auto">
         <h2>Please Login</h2>
@@ -40,7 +46,10 @@ const Login = () => {
           <Form.Control type="password" name="password" required placeholder="Password" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
+          <Form.Check 
+          type="checkbox" 
+          label="Check me out"
+          />
         </Form.Group>
         
         <Button variant="primary" type="submit">
